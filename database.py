@@ -1,4 +1,5 @@
 import motor.motor_asyncio
+from bson import ObjectId
 
 MONGO_DETAILS = "mongodb://localhost:27017"
 
@@ -22,3 +23,13 @@ async def add_user(user_data: dict) -> dict:
     new_user = await users_collection.find_one({"_id": user.inserted_id})
     convert_object_id_to_str(new_user)
     return new_user
+
+
+# Delete a user from the database
+async def delete_user(id: str):
+    user = await users_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        await users_collection.delete_one({"_id": ObjectId(id)})
+        return True
+
+    return False
