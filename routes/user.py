@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from database import add_user, delete_user
@@ -19,5 +19,5 @@ async def delete_user_data(id: str):
     user_deleted = await delete_user(id)
     if user_deleted:
         return f"User {id} deleted successfully"
-
-    return f"User {id} does not exist"
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} does not exist")
