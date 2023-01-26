@@ -2,7 +2,9 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
+
+from authentication import pwd_context
 
 
 class UserRole(Enum):
@@ -15,6 +17,15 @@ class UserSchema(BaseModel):
     name: str
     role: UserRole
     date_joined: date
+    password: Optional[str]
+
+    @validator('password', always=True)
+    def hash_password(cls, password: Optional[str], values):
+        user_role = values['role']
+        if (user_role is UserRole.ADMIN or user_role is UserRole.EDITOR) and password is None:
+            raise ValueError('password must be set for ADMIN/EDITOR user')
+
+        return pwd_context.hash(password)
 
     class Config:
         schema_extra = {
@@ -22,6 +33,7 @@ class UserSchema(BaseModel):
                 "name": "John Doe",
                 "role": "MEMBER",
                 "date_joined": "2023-01-01",
+                "password": "secret",
             }
         }
 
@@ -32,10 +44,4 @@ class UpdateUserModel(BaseModel):
     date_joined: Optional[date]
 
     class Config:
-        schema_extra = {
-            "example": {
-                "name": "John Doe",
-                "role": "MEMBER",
-                "date_joined": "2023-01-01",
-            }
-        }
+        schema_extra = UserSchema.Config.schema_extra
