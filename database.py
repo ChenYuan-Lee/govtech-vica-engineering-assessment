@@ -27,10 +27,5 @@ async def add_user(user_data: dict) -> dict:
 
 # Delete a user from the database
 async def delete_user(id: str):
-    id_filter = {"_id": ObjectId(id)}
-    user = await users_collection.find_one(id_filter)
-    if user:
-        await users_collection.delete_one(id_filter)
-        return True
-
-    return False
+    delete_result = await users_collection.delete_one({"_id": ObjectId(id)})
+    return delete_result.deleted_count == 1
