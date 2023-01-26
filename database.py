@@ -9,7 +9,6 @@ database = client.book_club
 
 users_collection = database.get_collection("users_collection")
 books_collection = database.get_collection("books_collection")
-book_copies_collection = database.get_collection("book_copies_collection")
 
 
 def convert_object_id_to_str(obj):
@@ -26,7 +25,7 @@ async def add_user(user_data: dict) -> dict:
 
 
 # Update a user with a matching ID
-async def update_user(id: str, data: dict):
+async def update_user(id: str, data: dict) -> bool:
     # Return false if an empty request body is sent.
     if len(data) < 1:
         return False
@@ -38,7 +37,7 @@ async def update_user(id: str, data: dict):
 
 
 # Delete a user from the database
-async def delete_user(id: str):
+async def delete_user(id: str) -> bool:
     delete_result = await users_collection.delete_one({"_id": ObjectId(id)})
     return delete_result.deleted_count == 1
 
@@ -48,3 +47,8 @@ async def add_book(book_data: dict) -> dict:
     new_book = await books_collection.find_one({"_id": book.inserted_id})
     convert_object_id_to_str(new_book)
     return new_book
+
+
+async def delete_book(id: str) -> bool:
+    delete_result = await books_collection.delete_one({"_id": ObjectId(id)})
+    return delete_result.deleted_count == 1
