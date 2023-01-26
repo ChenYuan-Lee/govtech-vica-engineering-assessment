@@ -35,3 +35,18 @@ class BookSchema(BaseModel):
                 "borrowed_by": {},
             }
         }
+
+
+class UpdateBookModel(BaseModel):
+    title: Optional[str]
+    description: Optional[str]
+    genre: Optional[str]
+    author: Optional[str]
+    year_published: Optional[int]
+    borrowing_availability_status: Optional[BorrowingAvailabilityStatus]
+    last_borrower: Optional[str]
+    total_copies: Optional[int]
+    borrowed_by: Optional[Dict[str, date]]
+
+    class Config:
+        schema_extra = BookSchema.Config.schema_extra
