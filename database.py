@@ -1,5 +1,8 @@
 import motor.motor_asyncio
 from bson import ObjectId
+from fastapi.encoders import jsonable_encoder
+
+from models.book import BookSchema
 
 MONGO_DETAILS = "mongodb://localhost:27017"
 
@@ -42,7 +45,12 @@ async def delete_user(id: str) -> bool:
     return delete_result.deleted_count == 1
 
 
-async def add_book(book_data: dict) -> dict:
+async def get_user(user_id: str):
+    return await users_collection.find_one({"_id": ObjectId(user_id)})
+
+
+async def add_book(book_data: BookSchema) -> dict:
+    book_data = jsonable_encoder(book_data)
     book = await books_collection.insert_one(book_data)
     new_book = await books_collection.find_one({"_id": book.inserted_id})
     convert_object_id_to_str(new_book)
@@ -54,6 +62,7 @@ async def update_book(id: str, data: dict) -> bool:
     if len(data) < 1:
         return False
 
+    data = jsonable_encoder(data)
     update_result = await books_collection.update_one(
         {"_id": ObjectId(id)}, {"$set": data}
     )
@@ -63,3 +72,7 @@ async def update_book(id: str, data: dict) -> bool:
 async def delete_book(id: str) -> bool:
     delete_result = await books_collection.delete_one({"_id": ObjectId(id)})
     return delete_result.deleted_count == 1
+
+
+async def get_book(book_id: str):
+    return await books_collection.find_one({"_id": ObjectId(book_id)})

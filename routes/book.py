@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from fastapi.encoders import jsonable_encoder
 
 from database import add_book, delete_book, update_book
 from models.book import BookSchema, UpdateBookModel
@@ -9,15 +8,12 @@ router = APIRouter(prefix="/book", tags=["book"])
 
 @router.post("/", response_description="Book added into the database")
 async def add_book_data(book: BookSchema):
-    book = jsonable_encoder(book)
-    new_book = await add_book(book)
-    return new_book
+    return await add_book(book)
 
 
 @router.put("/{id}")
 async def update_book_data(id: str, req: UpdateBookModel):
     req = {k: v for k, v in req.dict().items() if v is not None}
-    req = jsonable_encoder(req)
     book_updated = await update_book(id, req)
     if book_updated:
         return f"Book {id} updated"
