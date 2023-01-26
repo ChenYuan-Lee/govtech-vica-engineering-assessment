@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional
 
 from passlib.context import CryptContext
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Field
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -15,6 +15,7 @@ class UserRole(Enum):
 
 
 class UserSchema(BaseModel):
+    id: str = Field(alias='_id')
     name: str
     role: UserRole
     date_joined: date

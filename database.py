@@ -1,6 +1,8 @@
 import motor.motor_asyncio
 from bson import ObjectId
+from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
+from pymongo.errors import DuplicateKeyError
 
 from models.book import BookSchema
 
@@ -21,10 +23,12 @@ def convert_object_id_to_str(obj):
 
 # Add a new user into to the database
 async def add_user(user_data: dict) -> dict:
-    user = await users_collection.insert_one(user_data)
-    new_user = await users_collection.find_one({"_id": user.inserted_id})
-    convert_object_id_to_str(new_user)
-    return new_user
+    try:
+        user = await users_collection.insert_one(user_data)
+    except DuplicateKeyError:
+        raise HTTPException(status_code=409, detail=f"User ID already exists. Please try another one.")
+
+    return await users_collection.find_one({"_id": user.inserted_id})
 
 
 # Update a user with a matching ID
@@ -34,19 +38,20 @@ async def update_user(id: str, data: dict) -> bool:
         return False
 
     update_result = await users_collection.update_one(
-        {"_id": ObjectId(id)}, {"$set": data}
+        {"_id": id},
+        {"$set": data},
     )
     return update_result.matched_count == 1
 
 
 # Delete a user from the database
 async def delete_user(id: str) -> bool:
-    delete_result = await users_collection.delete_one({"_id": ObjectId(id)})
+    delete_result = await users_collection.delete_one({"_id": id})
     return delete_result.deleted_count == 1
 
 
 async def get_user(user_id: str):
-    return await users_collection.find_one({"_id": ObjectId(user_id)})
+    return await users_collection.find_one({"_id": user_id})
 
 
 async def add_book(book_data: BookSchema) -> dict:
