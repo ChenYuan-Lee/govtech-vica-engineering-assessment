@@ -25,3 +25,6 @@ Attempted by: Lee Chen Yuan
       ```
       brew services stop mongodb-community@6.0
       ```
+
+## Assumptions
+* A book's `BorrowingAvailabilityStatus` is True as long as there is at least 1 copy that has not been borrowed. 
