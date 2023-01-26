@@ -19,7 +19,10 @@ async def borrow_book(book_id: str, user_id: str):
         raise HTTPException(status_code=404, detail=f"Book {book_id} doesn't exist")
 
     if book['borrowing_availability_status'] == BorrowingAvailabilityStatus.UNAVAILABLE.name:
-        raise HTTPException(status_code=400, detail=f"Book {book_id} is unavailable for borrowing")
+        raise HTTPException(status_code=403, detail=f"Book {book_id} is unavailable for borrowing")
+
+    if user_id in book['borrowed_by']:
+        raise HTTPException(status_code=403, detail=f'User {user_id} already borrowed a copy of book {book_id}')
 
     # add user into the 'borrowed_by' entry
     book['borrowed_by'][user_id] = datetime.utcnow().date()
@@ -52,7 +55,7 @@ async def return_book(book_id: str, user_id: str):
         raise HTTPException(status_code=404, detail=f"Book {book_id} doesn't exist")
 
     if user_id not in book['borrowed_by']:
-        raise HTTPException(status_code=400, detail=f"User {user_id} did not borrow book {book_id}")
+        raise HTTPException(status_code=403, detail=f"User {user_id} did not borrow book {book_id}")
 
     # remove user
     book['borrowed_by'].pop(user_id)

@@ -27,4 +27,5 @@ Attempted by: Lee Chen Yuan
       ```
 
 ## Assumptions
-* A book's `BorrowingAvailabilityStatus` is True as long as there is at least 1 copy that has not been borrowed. 
+* A book's `BorrowingAvailabilityStatus` is True as long as there is at least 1 copy that has not been borrowed.
+* Each user is only allowed to borrow 1 copy of each book at any point in time.
