@@ -2,9 +2,10 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
+from passlib.context import CryptContext
 from pydantic import BaseModel, validator
 
-from authentication import pwd_context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class UserRole(Enum):

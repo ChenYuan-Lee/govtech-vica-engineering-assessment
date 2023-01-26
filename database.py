@@ -36,7 +36,7 @@ async def update_user(id: str, data: dict) -> bool:
     update_result = await users_collection.update_one(
         {"_id": ObjectId(id)}, {"$set": data}
     )
-    return update_result.modified_count == 1
+    return update_result.matched_count == 1
 
 
 # Delete a user from the database
