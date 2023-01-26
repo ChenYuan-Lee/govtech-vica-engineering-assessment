@@ -42,5 +42,27 @@ async def borrow_book(book_id: str, user_id: str):
 
 
 @router.put("/return")
-async def return_book(book_id: str):
-    pass
+async def return_book(book_id: str, user_id: str):
+    user = await get_user(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail=f"User {user_id} doesn't exist")
+
+    book = await get_book(book_id)
+    if not book:
+        raise HTTPException(status_code=404, detail=f"Book {book_id} doesn't exist")
+
+    if user_id not in book['borrowed_by']:
+        raise HTTPException(status_code=400, detail=f"User {user_id} did not borrow book {book_id}")
+
+    # remove user
+    book['borrowed_by'].pop(user_id)
+
+    book_updated = await update_book(
+        id=book_id,
+        data={
+            'borrowed_by': book['borrowed_by'],
+            'borrowing_availability_status': BorrowingAvailabilityStatus.AVAILABLE.name
+        }
+    )
+    if book_updated:
+        return f'User {user_id} successfully returned a copy of book {book_id}'
