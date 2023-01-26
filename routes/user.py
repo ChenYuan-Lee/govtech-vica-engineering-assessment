@@ -17,6 +17,7 @@ async def add_user_data(user: UserSchema):
 @router.put("/{id}")
 async def update_user_data(id: str, req: UpdateUserModel):
     req = {k: v for k, v in req.dict().items() if v is not None}
+    req = jsonable_encoder(req)
     user_updated = await update_user(id, req)
     if user_updated:
         return f"User {id} updated"
