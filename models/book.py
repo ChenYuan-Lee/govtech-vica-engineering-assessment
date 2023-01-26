@@ -16,15 +16,10 @@ class BookSchema(BaseModel):
     genre: str
     author: str
     year_published: int
+    borrowing_availability_status: BorrowingAvailabilityStatus
     last_borrower: Optional[str]
     total_copies: int
     borrowed_by: Dict[str, date]
-
-    @property
-    def borrowing_availability_status(self) -> BorrowingAvailabilityStatus:
-        if len(self.borrowed_by) < self.total_copies:
-            return BorrowingAvailabilityStatus.AVAILABLE
-        return BorrowingAvailabilityStatus.UNAVAILABLE
 
     class Config:
         schema_extra = {
@@ -34,9 +29,9 @@ class BookSchema(BaseModel):
                 "genre": "Science Fiction",
                 "author": "Adam Smith",
                 "year_published": "2001",
+                "borrowing_availability_status": "AVAILABLE",
+                "last_borrower": None,
                 "total_copies": 10,
-                # "borrowed_by": ,
-                # "borrowing_availability_status": "",
-                # "last_borrower": "",
+                "borrowed_by": {},
             }
         }
