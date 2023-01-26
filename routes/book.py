@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
 
-from database import add_book, delete_book
-from models.book import BookSchema
+from database import add_book, delete_book, update_book
+from models.book import BookSchema, UpdateBookModel
 
 router = APIRouter(prefix="/book", tags=["book"])
 
@@ -12,6 +12,17 @@ async def add_book_data(book: BookSchema):
     book = jsonable_encoder(book)
     new_book = await add_book(book)
     return new_book
+
+
+@router.put("/{id}")
+async def update_book_data(id: str, req: UpdateBookModel):
+    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = jsonable_encoder(req)
+    book_updated = await update_book(id, req)
+    if book_updated:
+        return f"Book {id} updated"
+    else:
+        raise HTTPException(status_code=404, detail=f"There was an error updating book {id}")
 
 
 @router.delete("/{id}", response_description="Book data deleted from the database")
