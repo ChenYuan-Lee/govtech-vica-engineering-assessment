@@ -41,3 +41,10 @@ async def update_user(id: str, data: dict):
 async def delete_user(id: str):
     delete_result = await users_collection.delete_one({"_id": ObjectId(id)})
     return delete_result.deleted_count == 1
+
+
+async def add_book(book_data: dict) -> dict:
+    book = await books_collection.insert_one(book_data)
+    new_book = await books_collection.find_one({"_id": book.inserted_id})
+    convert_object_id_to_str(new_book)
+    return new_book
