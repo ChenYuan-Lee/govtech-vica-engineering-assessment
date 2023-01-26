@@ -25,6 +25,18 @@ async def add_user(user_data: dict) -> dict:
     return new_user
 
 
+# Update a user with a matching ID
+async def update_user(id: str, data: dict):
+    # Return false if an empty request body is sent.
+    if len(data) < 1:
+        return False
+
+    update_result = await users_collection.update_one(
+        {"_id": ObjectId(id)}, {"$set": data}
+    )
+    return update_result.modified_count == 1
+
+
 # Delete a user from the database
 async def delete_user(id: str):
     delete_result = await users_collection.delete_one({"_id": ObjectId(id)})
