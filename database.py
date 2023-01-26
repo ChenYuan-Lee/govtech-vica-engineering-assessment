@@ -49,6 +49,17 @@ async def add_book(book_data: dict) -> dict:
     return new_book
 
 
+async def update_book(id: str, data: dict) -> bool:
+    # Return false if an empty request body is sent.
+    if len(data) < 1:
+        return False
+
+    update_result = await books_collection.update_one(
+        {"_id": ObjectId(id)}, {"$set": data}
+    )
+    return update_result.modified_count == 1
+
+
 async def delete_book(id: str) -> bool:
     delete_result = await books_collection.delete_one({"_id": ObjectId(id)})
     return delete_result.deleted_count == 1
