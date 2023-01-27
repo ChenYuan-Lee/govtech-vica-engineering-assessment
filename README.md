@@ -12,7 +12,9 @@ Attempted by: Lee Chen Yuan
      ```
      brew services start mongodb-community@6.0
      ```
-2. If this is your first time running this project, run the `populate_db.py` script to create 2 default admin users in the database.
+2. If this is your first time running this project, run the `recreate_default_admin.py` script to create a default admin user in the database.
+   * This admin user has `_id="default_admin"` and `password="secret"`
+   * You may also run this script in case you forget the password of all admin users, or in case you accidentally deleted all admin users.
 3. Start the FastAPI server
 
 ## User Manual
