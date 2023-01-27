@@ -4,7 +4,10 @@ Attempted by: Lee Chen Yuan
 ## Prerequisites
 * This project uses MongoDB Community Edition on macOS (installation instructions can be found [here](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)).
 * This project is built using Python 3.10.
-* Install the project dependencies (recommended to perform this inside a virtual environment): `pip install -r requirements.txt`.
+* Install the project dependencies (recommended to perform this inside a virtual environment):
+  ```
+  pip install -r requirements.txt
+  ```
 
 ## Getting Started
 1. [Run MongoDB Community Edition](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/#run-mongodb-community-edition)
@@ -26,8 +29,7 @@ Attempted by: Lee Chen Yuan
 ## User Manual
 * Go to `http://127.0.0.1:8000/docs` and you should see the following:
     ![img.png](screenshots/img.png)
-* If you try to perform a privileged action (e.g. add user, delete book), you will get a `403 	
-Error: Unauthorized`.
+* If you try to perform a privileged action (e.g. add user, delete book), you will get a `401 Error: Unauthorized`.
     ![img_3.png](screenshots/img_3.png)
 * To perform privileged actions, you will need to log in (assuming your user has the required privileges) by clicking on the green `Authorize` button located in the top-right corner of the page. Clicking on it will produce the following:
     ![img_1.png](screenshots/img_1.png)
