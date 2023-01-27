@@ -48,7 +48,8 @@ async def borrow_book(book_id: str, user_id: str):
         id=book_id,
         data={
             'borrowed_by': book['borrowed_by'],
-            'borrowing_availability_status': availability_status
+            'borrowing_availability_status': availability_status,
+            'last_borrower': user_id,
         }
     )
     if book_updated:
