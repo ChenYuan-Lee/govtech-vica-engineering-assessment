@@ -88,3 +88,11 @@ async def delete_book(id: str) -> bool:
 
 async def get_book(book_id: str):
     return await books_collection.find_one({"_id": ObjectId(book_id)})
+
+
+async def get_books():
+    books = []
+    async for book in books_collection.find():
+        convert_object_id_to_str(book)
+        books.append(book)
+    return books

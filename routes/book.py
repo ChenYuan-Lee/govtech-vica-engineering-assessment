@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from database import add_book, delete_book, update_book
+from database import add_book, delete_book, update_book, get_books
 from models.book import BookSchema, UpdateBookModel
 
 router = APIRouter(prefix="/book", tags=["book"])
@@ -28,3 +28,8 @@ async def delete_book_data(id: str):
         return f"Book {id} deleted successfully"
     else:
         raise HTTPException(status_code=404, detail=f"Book {id} does not exist")
+
+
+@router.get("/")
+async def fetch_books_data():
+    return await get_books()
