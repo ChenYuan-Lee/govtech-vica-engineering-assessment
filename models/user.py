@@ -32,6 +32,7 @@ class UserSchema(BaseModel):
     class Config:
         schema_extra = {
             "example": {
+                "_id": "john_doe",
                 "name": "John Doe",
                 "role": "MEMBER",
                 "date_joined": "2023-01-01",

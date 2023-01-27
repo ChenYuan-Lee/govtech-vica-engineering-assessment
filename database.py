@@ -54,6 +54,13 @@ async def get_user(user_id: str):
     return await users_collection.find_one({"_id": user_id})
 
 
+async def get_users():
+    users = []
+    async for user in users_collection.find():
+        users.append(user)
+    return users
+
+
 async def add_book(book_data: BookSchema) -> dict:
     book_data = jsonable_encoder(book_data)
     book = await books_collection.insert_one(book_data)

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
 
-from database import add_user, delete_user, update_user
+from database import add_user, delete_user, update_user, get_users
 from models.user import UserSchema, UpdateUserModel
 
 router = APIRouter(prefix="/user", tags=["user"])
@@ -32,3 +32,8 @@ async def delete_user_data(id: str):
         return f"User {id} deleted successfully"
     else:
         raise HTTPException(status_code=404, detail=f"User {id} does not exist")
+
+
+@router.get("/")
+async def fetch_users_data():
+    return await get_users()
